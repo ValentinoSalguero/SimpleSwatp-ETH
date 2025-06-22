@@ -14,7 +14,6 @@ Implement a smart contract called `SimpleSwap` that allows:
 
 ### ✅ 1. Add Liquidity
 
-```solidity
 function addLiquidity(
     address tokenA,
     address tokenB,
@@ -32,7 +31,6 @@ Calculates optimal amounts based on pool reserves.
 Mints liquidity and updates reserves.
 
 ✅ 2. Remove Liquidity
-solidity
 function removeLiquidity(
     address tokenA,
     address tokenB,
@@ -49,7 +47,6 @@ Returns proportional token amounts.
 Enforces slippage constraints.
 
 ✅ 3. Swap Tokens
-solidity
 function swapExactTokensForTokens(
     uint amountIn,
     uint amountOutMin,
@@ -64,12 +61,10 @@ Uses constant product formula with 0.3% fee.
 Validates slippage and deadline.
 
 ✅ 4. Get Price
-solidity
 function getPrice(address tokenA, address tokenB) external view returns (uint price);
 Returns the price of tokenB in terms of tokenA using current reserves.
 
 ✅ 5. Get Amount Out
-solidity
 function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) external pure returns (uint amountOut);
 Calculates expected output amount after a swap, applying 0.3% fee.
 
