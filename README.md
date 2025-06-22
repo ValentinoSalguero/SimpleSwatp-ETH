@@ -14,6 +14,7 @@ Implement a smart contract called `SimpleSwap` that allows:
 
 ### ✅ 1. Add Liquidity
 
+```solidity
 function addLiquidity(
     address tokenA,
     address tokenB,
@@ -24,6 +25,7 @@ function addLiquidity(
     address to,
     uint deadline
 ) external returns (uint amountA, uint amountB, uint liquidity);
+´´´
 Transfers tokens from the user.
 
 Calculates optimal amounts based on pool reserves.
