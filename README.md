@@ -1,20 +1,22 @@
-# SimpleSwap
+💱 SimpleSwap
+A minimal decentralized exchange (DEX) inspired by Uniswap, implemented in Solidity.
 
-A minimal decentralized exchange (DEX) inspired by Uniswap, implemented in Solidity.  
-This project was developed as the final assignment for Module 3, aiming to understand core concepts of liquidity pools and token swaps without depending on Uniswap’s protocol.
+This project was developed as the final assignment for Module 3, with the goal of understanding the core concepts of liquidity pools and token swaps without relying on the Uniswap protocol.
 
-## 🎯 Objective
+🎯 Objective
+Build a smart contract called SimpleSwap that allows:
 
-Implement a smart contract called `SimpleSwap` that allows:
-- Adding and removing liquidity to/from a token pair.
-- Swapping ERC-20 tokens.
-- Querying token prices and expected output amounts.
+✅ Adding and removing liquidity from token pairs
 
-## ⚙️ Features
+🔁 Swapping ERC-20 tokens
 
-### ✅ 1. Add Liquidity
+📊 Querying token prices and expected output amounts
 
-```solidity
+⚙️ Features
+1. ✅ Add Liquidity
+solidity
+Copiar
+Editar
 function addLiquidity(
     address tokenA,
     address tokenB,
@@ -25,14 +27,16 @@ function addLiquidity(
     address to,
     uint deadline
 ) external returns (uint amountA, uint amountB, uint liquidity);
-solidity´´´
-Transfers tokens from the user.
+Transfers tokens from the user
 
-Calculates optimal amounts based on pool reserves.
+Calculates optimal amounts based on pool reserves
 
-Mints liquidity and updates reserves.
+Mints liquidity and updates reserves
 
-✅ 2. Remove Liquidity
+2. 🧪 Remove Liquidity
+solidity
+Copiar
+Editar
 function removeLiquidity(
     address tokenA,
     address tokenB,
@@ -42,13 +46,16 @@ function removeLiquidity(
     address to,
     uint deadline
 ) external returns (uint amountA, uint amountB);
-Burns user's liquidity share.
+Burns the user's share of liquidity
 
-Returns proportional token amounts.
+Returns proportional token amounts
 
-Enforces slippage constraints.
+Enforces slippage constraints
 
-✅ 3. Swap Tokens
+3. 🔁 Swap Tokens
+solidity
+Copiar
+Editar
 function swapExactTokensForTokens(
     uint amountIn,
     uint amountOutMin,
@@ -56,38 +63,49 @@ function swapExactTokensForTokens(
     address to,
     uint deadline
 ) external returns (uint[] memory amounts);
-Supports direct swaps between two tokens.
+Supports direct swaps between two tokens
 
-Uses constant product formula with 0.3% fee.
+Uses constant product formula with 0.3% fee
 
-Validates slippage and deadline.
+Validates slippage and deadline
 
-✅ 4. Get Price
+4. 📈 Get Price
+solidity
+Copiar
+Editar
 function getPrice(address tokenA, address tokenB) external view returns (uint price);
-Returns the price of tokenB in terms of tokenA using current reserves.
+Returns the price of tokenB in terms of tokenA based on current reserves
 
-✅ 5. Get Amount Out
+5. 📤 Get Amount Out
+solidity
+Copiar
+Editar
 function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) external pure returns (uint amountOut);
-Calculates expected output amount after a swap, applying 0.3% fee.
+Calculates the expected output after a swap, applying a 0.3% fee
 
-🧠 Design Patterns and Good Practices
-Separation of Concerns: Logic is modularized with internal helper functions.
+🧠 Design Patterns & Best Practices
+🧩 Separation of Concerns: Logic is modularized using internal helper functions
 
-Check-Effects-Interactions: Ensures safe order of execution.
+⛓ Checks-Effects-Interactions: Ensures a secure order of execution
 
-Factory-Like Pair Mapping: Uses hash-based mapping for pair reserves.
+🏭 Factory-like Pair Mapping: Uses hash-based mapping to track reserves
 
-NatSpec Documentation: All public functions include structured NatSpec comments.
+📘 NatSpec Documentation: All public functions include structured NatSpec comments
 
-Security: Uses OpenZeppelin's SafeERC20 for safe token transfers.
+🔐 Security: Uses OpenZeppelin’s SafeERC20 for safe token transfers
 
-AMM Formula: Implements Uniswap v2 pricing formula.
+📊 AMM Formula: Implements the Uniswap V2 pricing model
 
-🧪 How to Deploy
-This contract is compatible with Hardhat or Remix.
-Use the provided scripts/deploy_with_ethers.ts or deploy manually via Remix UI.
+🚀 Deployment
+Compatible with Hardhat or Remix.
 
-📂 Project Structure
+Run the script: scripts/deploy_with_ethers.ts
+
+Or deploy manually using the Remix UI
+
+📁 Project Structure
+Copiar
+Editar
 SimpleSwap/
 ├── contracts/
 │   └── SimpleSwap.sol
@@ -96,17 +114,17 @@ SimpleSwap/
 ├── README.md
 └── ...
 ✅ Verification Checklist
- Contract compiles successfully.
+ Contract compiles successfully
 
- All 5 required functions are implemented.
+ All five core functions are implemented
 
- Follows best practices and uses gas-efficient patterns.
+ Follows Solidity best practices and gas optimization
 
- Includes clear function and logic comments in English.
+ Clear function and logic comments in English
 
- Verified on a testnet or local network.
+ Tested on a testnet or local network
 
- Documented using Markdown.
+ Properly documented in Markdown
 
 📜 License
 GPL-3.0
@@ -114,3 +132,4 @@ GPL-3.0
 👤 Author
 Valentino Salguero
 Module 3 – Final Solidity Project
+
