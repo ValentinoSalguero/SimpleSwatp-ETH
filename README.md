@@ -14,9 +14,7 @@ Build a smart contract called SimpleSwap that allows:
 
 ⚙️ Features
 1. ✅ Add Liquidity
-solidity
-Copiar
-Editar
+
 function addLiquidity(
     address tokenA,
     address tokenB,
@@ -34,9 +32,7 @@ Calculates optimal amounts based on pool reserves
 Mints liquidity and updates reserves
 
 2. 🧪 Remove Liquidity
-solidity
-Copiar
-Editar
+
 function removeLiquidity(
     address tokenA,
     address tokenB,
@@ -53,9 +49,7 @@ Returns proportional token amounts
 Enforces slippage constraints
 
 3. 🔁 Swap Tokens
-solidity
-Copiar
-Editar
+
 function swapExactTokensForTokens(
     uint amountIn,
     uint amountOutMin,
@@ -70,16 +64,12 @@ Uses constant product formula with 0.3% fee
 Validates slippage and deadline
 
 4. 📈 Get Price
-solidity
-Copiar
-Editar
+
 function getPrice(address tokenA, address tokenB) external view returns (uint price);
 Returns the price of tokenB in terms of tokenA based on current reserves
 
 5. 📤 Get Amount Out
-solidity
-Copiar
-Editar
+
 function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) external pure returns (uint amountOut);
 Calculates the expected output after a swap, applying a 0.3% fee
 
@@ -104,8 +94,7 @@ Run the script: scripts/deploy_with_ethers.ts
 Or deploy manually using the Remix UI
 
 📁 Project Structure
-Copiar
-Editar
+
 SimpleSwap/
 ├── contracts/
 │   └── SimpleSwap.sol
@@ -132,4 +121,3 @@ GPL-3.0
 👤 Author
 Valentino Salguero
 Module 3 – Final Solidity Project
-
