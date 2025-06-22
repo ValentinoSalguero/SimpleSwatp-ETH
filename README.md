@@ -33,8 +33,6 @@ Mints liquidity and updates reserves.
 
 ✅ 2. Remove Liquidity
 solidity
-Copiar
-Editar
 function removeLiquidity(
     address tokenA,
     address tokenB,
@@ -52,8 +50,6 @@ Enforces slippage constraints.
 
 ✅ 3. Swap Tokens
 solidity
-Copiar
-Editar
 function swapExactTokensForTokens(
     uint amountIn,
     uint amountOutMin,
@@ -69,15 +65,11 @@ Validates slippage and deadline.
 
 ✅ 4. Get Price
 solidity
-Copiar
-Editar
 function getPrice(address tokenA, address tokenB) external view returns (uint price);
 Returns the price of tokenB in terms of tokenA using current reserves.
 
 ✅ 5. Get Amount Out
 solidity
-Copiar
-Editar
 function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) external pure returns (uint amountOut);
 Calculates expected output amount after a swap, applying 0.3% fee.
 
@@ -99,8 +91,6 @@ This contract is compatible with Hardhat or Remix.
 Use the provided scripts/deploy_with_ethers.ts or deploy manually via Remix UI.
 
 📂 Project Structure
-Copiar
-Editar
 SimpleSwap/
 ├── contracts/
 │   └── SimpleSwap.sol
