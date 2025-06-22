@@ -25,7 +25,7 @@ function addLiquidity(
     address to,
     uint deadline
 ) external returns (uint amountA, uint amountB, uint liquidity);
-´´´
+solidity´´´
 Transfers tokens from the user.
 
 Calculates optimal amounts based on pool reserves.
