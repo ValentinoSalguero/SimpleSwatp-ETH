@@ -93,15 +93,6 @@ Run the script: scripts/deploy_with_ethers.ts
 
 Or deploy manually using the Remix UI
 
-📁 Project Structure
-
-SimpleSwap/
-├── contracts/
-│   └── SimpleSwap.sol
-├── scripts/
-│   └── deploy_with_ethers.ts
-├── README.md
-└── ...
 ✅ Verification Checklist
  Contract compiles successfully
 
