@@ -86,6 +86,11 @@ Calculates the expected output after a swap, applying a 0.3% fee
 
 📊 AMM Formula: Implements the Uniswap V2 pricing model
 
+🔍 Verification
+The contract is tested and verified by calling an external SwapVerifier contract deployed on Sepolia testnet.
+
+This verifier contract runs end-to-end checks on SimpleSwap’s core functions to ensure correct behavior.
+
 🚀 Deployment
 Compatible with Hardhat or Remix.
 
