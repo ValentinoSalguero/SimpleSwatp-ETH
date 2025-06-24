@@ -313,44 +313,6 @@
 				],
 				"stateMutability": "view",
 				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
-						"name": "tokenA",
-						"type": "address"
-					},
-					{
-						"internalType": "address",
-						"name": "tokenB",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountA",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountB",
-						"type": "uint256"
-					},
-					{
-						"internalType": "uint256",
-						"name": "amountIn",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "author",
-						"type": "string"
-					}
-				],
-				"name": "verifySwap",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
 			}
 		],
 		"devdoc": {
@@ -433,16 +395,6 @@
 					"returns": {
 						"amounts": "Array containing input and output amounts"
 					}
-				},
-				"verifySwap(address,address,uint256,uint256,uint256,string)": {
-					"params": {
-						"amountA": "Amount of token A to mint/add liquidity in verification",
-						"amountB": "Amount of token B to mint/add liquidity in verification",
-						"amountIn": "Amount of token A to swap during verification",
-						"author": "Name of the author to record in the verifier contract",
-						"tokenA": "Address of token A used for verification",
-						"tokenB": "Address of token B used for verification"
-					}
 				}
 			},
 			"stateVariables": {
@@ -478,13 +430,10 @@
 					"notice": "Sets the address of the SwapVerifier contract"
 				},
 				"swapExactTokensForTokens(uint256,uint256,address[],address,uint256)": {
-					"notice": "Swaps exact amountIn of tokenIn for tokenOut with a 0.3% fee applied"
+					"notice": "Swaps exact amountIn of tokenIn for tokenOut with a 0.3% fee applied (Uniswap standard fee)"
 				},
 				"swapVerifier()": {
 					"notice": "Address of the deployed SwapVerifier contract"
-				},
-				"verifySwap(address,address,uint256,uint256,uint256,string)": {
-					"notice": "Calls the external SwapVerifier contract to verify this SimpleSwap implementation"
 				}
 			},
 			"notice": "This contract allows users to add/remove liquidity, swap tokens, fetch price and calculate output amounts.",
@@ -604,11 +553,11 @@
 			]
 		},
 		"contracts/SimpleSwap.sol": {
-			"keccak256": "0x52f7495e5220378f9d46c9f264bed59a6c856cbd6f5bab10d16bf2fb859cc223",
+			"keccak256": "0x21ec29e1c5eada23b41be6266aa55e38346c3111e2d4afc34bb3492214d3a52e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://41bdbae8799848388a248cc936be3cd758b6b8c0fded3ae173a8bbca8b67e7d4",
-				"dweb:/ipfs/QmRJL2FE5VZMbMLqaivxJkz11uNKQP7Qv2Bvng4eHoE1Yg"
+				"bzz-raw://04a2900035310816501daba756df0444bbda29dd0f056dbd496d5be2b2ed04cf",
+				"dweb:/ipfs/Qmczpfwj2HnnDsYDknsLdW9K8Upr92RUNGhjxgKhKXh1c6"
 			]
 		}
 	},

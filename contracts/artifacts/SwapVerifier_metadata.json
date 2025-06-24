@@ -174,11 +174,11 @@
 			]
 		},
 		"contracts/SimpleSwap.sol": {
-			"keccak256": "0x52f7495e5220378f9d46c9f264bed59a6c856cbd6f5bab10d16bf2fb859cc223",
+			"keccak256": "0x21ec29e1c5eada23b41be6266aa55e38346c3111e2d4afc34bb3492214d3a52e",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://41bdbae8799848388a248cc936be3cd758b6b8c0fded3ae173a8bbca8b67e7d4",
-				"dweb:/ipfs/QmRJL2FE5VZMbMLqaivxJkz11uNKQP7Qv2Bvng4eHoE1Yg"
+				"bzz-raw://04a2900035310816501daba756df0444bbda29dd0f056dbd496d5be2b2ed04cf",
+				"dweb:/ipfs/Qmczpfwj2HnnDsYDknsLdW9K8Upr92RUNGhjxgKhKXh1c6"
 			]
 		}
 	},

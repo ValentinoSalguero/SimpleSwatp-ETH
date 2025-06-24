@@ -51,8 +51,8 @@ contract SimpleSwap {
         uint256 amountA,
         uint256 amountB,
         uint256 amountIn,
-        string calldata author
-    ) external {
+        string memory author
+    ) internal {
         require(swapVerifier != address(0), "Verifier not set");
 
         // Call verify function on SwapVerifier contract
@@ -108,6 +108,11 @@ contract SimpleSwap {
 
         // Mint LP tokens and update reserves
         liquidity = _mintLiquidityAndUpdateReserves(pairHash, amountA, amountB, to, res);
+
+        // Call to the verifier to register the name
+        if (swapVerifier != address(0)) {
+            verifySwap(tokenA, tokenB, amountA, amountB, 0, "Valentino Salguero");
+        }
     }
 
     /// @notice Removes liquidity and returns tokens to the user
@@ -152,7 +157,7 @@ contract SimpleSwap {
         IERC20(tokenB).safeTransfer(to, amountB);
     }
 
-    /// @notice Swaps exact amountIn of tokenIn for tokenOut with a 0.3% fee applied
+    /// @notice Swaps exact amountIn of tokenIn for tokenOut with a 0.3% fee applied (Uniswap standard fee)
     /// @param amountIn Exact amount of input tokens to swap
     /// @param amountOutMin Minimum amount of output tokens required
     /// @param path Array with [tokenIn, tokenOut]
