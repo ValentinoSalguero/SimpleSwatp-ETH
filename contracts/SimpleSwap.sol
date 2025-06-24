@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0
- 
+
 pragma solidity >=0.8.2 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "./LiquidityToken.sol";
 
 /// @custom:dev-run-script ./scripts/deploy_with_ethers.ts
 /// @title SimpleSwap - A minimal Uniswap-like DEX for ERC-20 tokens
@@ -25,8 +26,46 @@ contract SimpleSwap {
     /// @dev Maps the pair hash to the total liquidity of the pool
     mapping(bytes32 => uint) public totalLiquidity;
 
-    /// @dev Tracks each user's liquidity share in a given pair
-    mapping(bytes32 => mapping(address => uint)) public liquidityBalance;
+    /// @dev Maps the pair hash to the associated ERC20 liquidity token
+    mapping(bytes32 => LiquidityToken) public liquidityTokens;
+
+    /// @notice Address of the deployed SwapVerifier contract
+    address public swapVerifier;
+
+    /// @notice Sets the address of the SwapVerifier contract
+    /// @param verifierAddress The deployed SwapVerifier contract address
+    function setSwapVerifier(address verifierAddress) external {
+        swapVerifier = verifierAddress;
+    }
+
+    /// @notice Calls the external SwapVerifier contract to verify this SimpleSwap implementation
+    /// @param tokenA Address of token A used for verification
+    /// @param tokenB Address of token B used for verification
+    /// @param amountA Amount of token A to mint/add liquidity in verification
+    /// @param amountB Amount of token B to mint/add liquidity in verification
+    /// @param amountIn Amount of token A to swap during verification
+    /// @param author Name of the author to record in the verifier contract
+    function verifySwap(
+        address tokenA,
+        address tokenB,
+        uint256 amountA,
+        uint256 amountB,
+        uint256 amountIn,
+        string calldata author
+    ) external {
+        require(swapVerifier != address(0), "Verifier not set");
+
+        // Call verify function on SwapVerifier contract
+        SwapVerifier(swapVerifier).verify(
+            address(this),
+            tokenA,
+            tokenB,
+            amountA,
+            amountB,
+            amountIn,
+            author
+        );
+    }
 
     /// @notice Adds liquidity to a token pair pool
     /// @param tokenA Address of token A
@@ -53,9 +92,9 @@ contract SimpleSwap {
         require(block.timestamp <= deadline, "Expired");
 
         bytes32 pairHash = _getPairHash(tokenA, tokenB);
-        Reserve storage res = reserves[pairHash]; // Get storage reference here for the original function call
+        Reserve storage res = reserves[pairHash];
 
-        // Determine how much of each token to add based on existing reserves
+        // Compute optimal token amounts to maintain price ratio
         (amountA, amountB) = _calculateLiquidityAmounts(
             res.reserveA,
             res.reserveB,
@@ -65,11 +104,9 @@ contract SimpleSwap {
             amountBMin
         );
 
-        // Perform token transfers
         _performAddLiquidityTransfers(tokenA, tokenB, amountA, amountB);
 
-        // Mint liquidity and update reserves
-        // Pass 'res' directly to avoid re-fetching storage, improving efficiency
+        // Mint LP tokens and update reserves
         liquidity = _mintLiquidityAndUpdateReserves(pairHash, amountA, amountB, to, res);
     }
 
@@ -99,24 +136,23 @@ contract SimpleSwap {
         uint total = totalLiquidity[pairHash];
         require(total > 0, "No liquidity");
 
-        // Calculate user's share of the pool
+        /// @dev Burns user's liquidity tokens
+        liquidityTokens[pairHash].burn(msg.sender, liquidity);
+
         amountA = res.reserveA * liquidity / total;
         amountB = res.reserveB * liquidity / total;
 
         require(amountA >= amountAMin && amountB >= amountBMin, "Slippage");
 
-        // Burn liquidity and update storage
-        liquidityBalance[pairHash][msg.sender] -= liquidity;
         totalLiquidity[pairHash] -= liquidity;
         res.reserveA -= uint112(amountA);
         res.reserveB -= uint112(amountB);
 
-        // Send tokens back to user
         IERC20(tokenA).safeTransfer(to, amountA);
         IERC20(tokenB).safeTransfer(to, amountB);
     }
 
-    /// @notice Swaps exact amountIn of tokenIn for tokenOut
+    /// @notice Swaps exact amountIn of tokenIn for tokenOut with a 0.3% fee applied
     /// @param amountIn Exact amount of input tokens to swap
     /// @param amountOutMin Minimum amount of output tokens required
     /// @param path Array with [tokenIn, tokenOut]
@@ -136,18 +172,14 @@ contract SimpleSwap {
         address tokenIn = path[0];
         address tokenOut = path[1];
 
-        // Calculate the output amount
+        // Calculate output amount using reserves
         uint amountOut = _calculateSwapOutput(amountIn, tokenIn, tokenOut);
         require(amountOut >= amountOutMin, "Insufficient output");
 
-        // Perform token transfer
         _performSwapTransfers(tokenIn, tokenOut, amountIn, amountOut, to);
-
-        // Update reserves
         _updateReservesAfterSwap(tokenIn, tokenOut, amountIn, amountOut);
 
-        // Return input/output info
-        amounts = new uint[](2);
+        amounts = new uint[] (2) ;
         amounts[0] = amountIn;
         amounts[1] = amountOut;
     }
@@ -165,7 +197,7 @@ contract SimpleSwap {
         price = (reserveB * 1e18) / reserveA;
     }
 
-    /// @notice Calculates output tokens for a given input using Uniswap formula
+    /// @notice Calculates output tokens for a given input using Uniswap formula with a 0.3% fee
     /// @param amountIn Input amount
     /// @param reserveIn Reserve of input token
     /// @param reserveOut Reserve of output token
@@ -179,9 +211,7 @@ contract SimpleSwap {
         amountOut = numerator / denominator;
     }
 
-    // --- New Internal Helper Functions for addLiquidity ---
-
-    /// @dev Calculates the optimal amounts of tokens to add for liquidity.
+    /// @dev Computes optimal token amounts for liquidity provisioning to maintain price ratio
     function _calculateLiquidityAmounts(
         uint112 currentReserveA,
         uint112 currentReserveB,
@@ -191,10 +221,8 @@ contract SimpleSwap {
         uint amountBMin
     ) internal pure returns (uint calculatedAmountA, uint calculatedAmountB) {
         if (currentReserveA == 0 && currentReserveB == 0) {
-            // No liquidity yet; use desired amounts
             (calculatedAmountA, calculatedAmountB) = (amountADesired, amountBDesired);
         } else {
-            // Maintain ratio between reserves
             uint amountBOptimal = amountADesired * currentReserveB / currentReserveA;
             if (amountBOptimal <= amountBDesired) {
                 require(amountBOptimal >= amountBMin, "Insufficient B");
@@ -207,7 +235,7 @@ contract SimpleSwap {
         }
     }
 
-    /// @dev Handles the token transfers for adding liquidity.
+    /// @dev Transfers tokens from user to contract for liquidity addition
     function _performAddLiquidityTransfers(
         address tokenA,
         address tokenB,
@@ -218,25 +246,38 @@ contract SimpleSwap {
         IERC20(tokenB).safeTransferFrom(msg.sender, address(this), amountB);
     }
 
-    /// @dev Mints liquidity tokens and updates pool reserves.
+    /// @dev Deploys liquidity token (if needed), mints it, and updates pool reserves
+    /// @param pairHash The hash representing the token pair
+    /// @param amountA Amount of token A added
+    /// @param amountB Amount of token B added
+    /// @param to Recipient of the liquidity tokens
+    /// @param res Storage reference to reserves
+    /// @return liquidity Amount of liquidity tokens minted
     function _mintLiquidityAndUpdateReserves(
         bytes32 pairHash,
         uint amountA,
         uint amountB,
         address to,
-        Reserve storage res // Pass the storage reference directly
+        Reserve storage res
     ) internal returns (uint liquidity) {
         liquidity = amountA + amountB;
-        totalLiquidity[pairHash] += liquidity;
-        liquidityBalance[pairHash][to] += liquidity;
 
+        if (address(liquidityTokens[pairHash]) == address(0)) {
+            string memory name = string(abi.encodePacked("Liquidity Token ", _toHex(pairHash)));
+            string memory symbol = string(abi.encodePacked("LQ-", _shortHex(pairHash)));
+            LiquidityToken token = new LiquidityToken(name, symbol);
+            token.transferOwnership(address(this));
+            liquidityTokens[pairHash] = token;
+        }
+
+        liquidityTokens[pairHash].mint(to, liquidity);
+
+        totalLiquidity[pairHash] += liquidity;
         res.reserveA += uint112(amountA);
         res.reserveB += uint112(amountB);
     }
 
-    // --- Existing Internal Helper Functions for Swapping & Utilities ---
-
-    /// @dev Internal helper to calculate swap output
+    /// @dev Calculates output amount for a given swap
     function _calculateSwapOutput(uint amountIn, address tokenIn, address tokenOut) internal view returns (uint) {
         bytes32 pairHash = _getPairHash(tokenIn, tokenOut);
         Reserve memory res = reserves[pairHash];
@@ -244,13 +285,13 @@ contract SimpleSwap {
         return getAmountOut(amountIn, reserveIn, reserveOut);
     }
 
-    /// @dev Internal helper to perform token transfers for a swap
+    /// @dev Transfers input tokens and sends output tokens to user
     function _performSwapTransfers(address tokenIn, address tokenOut, uint amountIn, uint amountOut, address to) internal {
         IERC20(tokenIn).safeTransferFrom(msg.sender, address(this), amountIn);
         IERC20(tokenOut).safeTransfer(to, amountOut);
     }
 
-    /// @dev Internal helper to update reserves after a swap
+    /// @dev Updates internal reserves after swap
     function _updateReservesAfterSwap(address tokenIn, address tokenOut, uint amountIn, uint amountOut) internal {
         bytes32 pairHash = _getPairHash(tokenIn, tokenOut);
         Reserve storage res = reserves[pairHash];
@@ -263,13 +304,51 @@ contract SimpleSwap {
         }
     }
 
-    /// @dev Generates a unique hash for a token pair (ordered)
+    /// @dev Computes a consistent hash for the token pair
+    /// @param tokenA Address of token A
+    /// @param tokenB Address of token B
+    /// @return Pair hash used as key in mappings
     function _getPairHash(address tokenA, address tokenB) internal pure returns (bytes32) {
         return keccak256(abi.encodePacked(tokenA < tokenB ? tokenA : tokenB, tokenA < tokenB ? tokenB : tokenA));
     }
 
-    /// @dev Sorts and returns reserves based on token order
+    /// @dev Returns reserves sorted according to token addresses
     function _getSortedReserves(address tokenA, address tokenB, Reserve memory res) internal pure returns (uint, uint) {
         return tokenA < tokenB ? (res.reserveA, res.reserveB) : (res.reserveB, res.reserveA);
     }
+
+    /// @dev Converts bytes32 to full hexadecimal string
+    function _toHex(bytes32 data) internal pure returns (string memory) {
+        bytes memory alphabet = "0123456789abcdef";
+        bytes memory str = new bytes(64);
+        for (uint i = 0; i < 32; i++) {
+            str[i*2] = alphabet[uint(uint8(data[i] >> 4))];
+            str[1+i*2] = alphabet[uint(uint8(data[i] & 0x0f))];
+        }
+        return string(str);
+    }
+
+    /// @dev Converts bytes32 to short 4-byte (8-char) hex string
+    function _shortHex(bytes32 data) internal pure returns (string memory) {
+        bytes memory alphabet = "0123456789abcdef";
+        bytes memory str = new bytes(8);
+        for (uint i = 0; i < 4; i++) {
+            str[i*2] = alphabet[uint(uint8(data[i] >> 4))];
+            str[1+i*2] = alphabet[uint(uint8(data[i] & 0x0f))];
+        }
+        return string(str);
+    }
+}
+
+/// @dev Interface for SwapVerifier contract
+interface SwapVerifier {
+    function verify(
+        address swapContract,
+        address tokenA,
+        address tokenB,
+        uint256 amountA,
+        uint256 amountB,
+        uint256 amountIn,
+        string calldata author
+    ) external;
 }
