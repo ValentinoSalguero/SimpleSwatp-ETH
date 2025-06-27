@@ -166,19 +166,19 @@
 			]
 		},
 		"contracts/LiquidityToken.sol": {
-			"keccak256": "0x4a30733aabaece672850c0ca78a903ff7cae7280e448e1dce441fda70d8277bd",
+			"keccak256": "0xbec3a05690cace98c69230b6d6874071f48fec8e7c3ca6723314e297687245bf",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://7c1f84cbe6fdb6a37e266ba9f49e4bddad7d00daea7032bdffc8420971c250c5",
-				"dweb:/ipfs/QmRZL5pUKFP5TpeTEx7hXSgCnHajUXYXzm7G21Mt3dFBsd"
+				"bzz-raw://eba208db80b75b4142143260fc53af39bb05c56f016fb03c38e90007ab408496",
+				"dweb:/ipfs/QmVPP95sxsi4x6RaesE13VL7wgN5ZH2jTHBdFbay3YJyQE"
 			]
 		},
 		"contracts/SimpleSwap.sol": {
-			"keccak256": "0x21ec29e1c5eada23b41be6266aa55e38346c3111e2d4afc34bb3492214d3a52e",
+			"keccak256": "0x4a3f33abe0bc850c892259d9d2dfa35e09e373686346ee62359ad6bc18e85faf",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://04a2900035310816501daba756df0444bbda29dd0f056dbd496d5be2b2ed04cf",
-				"dweb:/ipfs/Qmczpfwj2HnnDsYDknsLdW9K8Upr92RUNGhjxgKhKXh1c6"
+				"bzz-raw://98ea221ece606f077899f26cffefcf9b9d81ecbafccb71bc7bf0143ad053367c",
+				"dweb:/ipfs/QmXPM5GnjqBCcKnbxaN7xxmhDcF9m9xWYPEffLbwLHEBMP"
 			]
 		}
 	},

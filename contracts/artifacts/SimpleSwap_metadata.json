@@ -233,19 +233,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "verifierAddress",
-						"type": "address"
-					}
-				],
-				"name": "setSwapVerifier",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "amountIn",
 						"type": "uint256"
@@ -280,19 +267,6 @@
 					}
 				],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "swapVerifier",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -379,11 +353,6 @@
 						"amountB": "Amount of token B received"
 					}
 				},
-				"setSwapVerifier(address)": {
-					"params": {
-						"verifierAddress": "The deployed SwapVerifier contract address"
-					}
-				},
 				"swapExactTokensForTokens(uint256,uint256,address[],address,uint256)": {
 					"params": {
 						"amountIn": "Exact amount of input tokens to swap",
@@ -426,14 +395,8 @@
 				"removeLiquidity(address,address,uint256,uint256,uint256,address,uint256)": {
 					"notice": "Removes liquidity and returns tokens to the user"
 				},
-				"setSwapVerifier(address)": {
-					"notice": "Sets the address of the SwapVerifier contract"
-				},
 				"swapExactTokensForTokens(uint256,uint256,address[],address,uint256)": {
 					"notice": "Swaps exact amountIn of tokenIn for tokenOut with a 0.3% fee applied (Uniswap standard fee)"
-				},
-				"swapVerifier()": {
-					"notice": "Address of the deployed SwapVerifier contract"
 				}
 			},
 			"notice": "This contract allows users to add/remove liquidity, swap tokens, fetch price and calculate output amounts.",
@@ -545,19 +508,19 @@
 			]
 		},
 		"contracts/LiquidityToken.sol": {
-			"keccak256": "0x4a30733aabaece672850c0ca78a903ff7cae7280e448e1dce441fda70d8277bd",
+			"keccak256": "0xbec3a05690cace98c69230b6d6874071f48fec8e7c3ca6723314e297687245bf",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://7c1f84cbe6fdb6a37e266ba9f49e4bddad7d00daea7032bdffc8420971c250c5",
-				"dweb:/ipfs/QmRZL5pUKFP5TpeTEx7hXSgCnHajUXYXzm7G21Mt3dFBsd"
+				"bzz-raw://eba208db80b75b4142143260fc53af39bb05c56f016fb03c38e90007ab408496",
+				"dweb:/ipfs/QmVPP95sxsi4x6RaesE13VL7wgN5ZH2jTHBdFbay3YJyQE"
 			]
 		},
 		"contracts/SimpleSwap.sol": {
-			"keccak256": "0x21ec29e1c5eada23b41be6266aa55e38346c3111e2d4afc34bb3492214d3a52e",
+			"keccak256": "0x5ff9999f52c711ecde9448aefc3efa6f65740be5b4dcd7a114702f90602c5672",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://04a2900035310816501daba756df0444bbda29dd0f056dbd496d5be2b2ed04cf",
-				"dweb:/ipfs/Qmczpfwj2HnnDsYDknsLdW9K8Upr92RUNGhjxgKhKXh1c6"
+				"bzz-raw://14770876e240d7a84b06e6a4b1fb914f44356ece081a22bc5f5188736e82e46b",
+				"dweb:/ipfs/QmerTLaz89WJKAhwWw7rb5BfKgECdo8DJT5LVoKyqDv788"
 			]
 		}
 	},

@@ -441,6 +441,7 @@
 			}
 		],
 		"devdoc": {
+			"custom:dev-run-script": "./scripts/deploy_with_ethers.ts",
 			"errors": {
 				"ERC20InsufficientAllowance(address,uint256,uint256)": [
 					{
@@ -625,11 +626,11 @@
 			]
 		},
 		"contracts/LiquidityToken.sol": {
-			"keccak256": "0x4a30733aabaece672850c0ca78a903ff7cae7280e448e1dce441fda70d8277bd",
+			"keccak256": "0xbec3a05690cace98c69230b6d6874071f48fec8e7c3ca6723314e297687245bf",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://7c1f84cbe6fdb6a37e266ba9f49e4bddad7d00daea7032bdffc8420971c250c5",
-				"dweb:/ipfs/QmRZL5pUKFP5TpeTEx7hXSgCnHajUXYXzm7G21Mt3dFBsd"
+				"bzz-raw://eba208db80b75b4142143260fc53af39bb05c56f016fb03c38e90007ab408496",
+				"dweb:/ipfs/QmVPP95sxsi4x6RaesE13VL7wgN5ZH2jTHBdFbay3YJyQE"
 			]
 		}
 	},

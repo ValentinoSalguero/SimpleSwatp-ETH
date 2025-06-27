@@ -29,44 +29,6 @@ contract SimpleSwap {
     /// @dev Maps the pair hash to the associated ERC20 liquidity token
     mapping(bytes32 => LiquidityToken) public liquidityTokens;
 
-    /// @notice Address of the deployed SwapVerifier contract
-    address public swapVerifier;
-
-    /// @notice Sets the address of the SwapVerifier contract
-    /// @param verifierAddress The deployed SwapVerifier contract address
-    function setSwapVerifier(address verifierAddress) external {
-        swapVerifier = verifierAddress;
-    }
-
-    /// @notice Calls the external SwapVerifier contract to verify this SimpleSwap implementation
-    /// @param tokenA Address of token A used for verification
-    /// @param tokenB Address of token B used for verification
-    /// @param amountA Amount of token A to mint/add liquidity in verification
-    /// @param amountB Amount of token B to mint/add liquidity in verification
-    /// @param amountIn Amount of token A to swap during verification
-    /// @param author Name of the author to record in the verifier contract
-    function verifySwap(
-        address tokenA,
-        address tokenB,
-        uint256 amountA,
-        uint256 amountB,
-        uint256 amountIn,
-        string memory author
-    ) internal {
-        require(swapVerifier != address(0), "Verifier not set");
-
-        // Call verify function on SwapVerifier contract
-        SwapVerifier(swapVerifier).verify(
-            address(this),
-            tokenA,
-            tokenB,
-            amountA,
-            amountB,
-            amountIn,
-            author
-        );
-    }
-
     /// @notice Adds liquidity to a token pair pool
     /// @param tokenA Address of token A
     /// @param tokenB Address of token B
@@ -108,11 +70,6 @@ contract SimpleSwap {
 
         // Mint LP tokens and update reserves
         liquidity = _mintLiquidityAndUpdateReserves(pairHash, amountA, amountB, to, res);
-
-        // Call to the verifier to register the name
-        if (swapVerifier != address(0)) {
-            verifySwap(tokenA, tokenB, amountA, amountB, 0, "Valentino Salguero");
-        }
     }
 
     /// @notice Removes liquidity and returns tokens to the user
@@ -265,7 +222,7 @@ contract SimpleSwap {
         address to,
         Reserve storage res
     ) internal returns (uint liquidity) {
-        liquidity = amountA + amountB;
+        liquidity = amountA + amountB; // Esta es tu lógica original de acuñación
 
         if (address(liquidityTokens[pairHash]) == address(0)) {
             string memory name = string(abi.encodePacked("Liquidity Token ", _toHex(pairHash)));
@@ -343,17 +300,4 @@ contract SimpleSwap {
         }
         return string(str);
     }
-}
-
-/// @dev Interface for SwapVerifier contract
-interface SwapVerifier {
-    function verify(
-        address swapContract,
-        address tokenA,
-        address tokenB,
-        uint256 amountA,
-        uint256 amountB,
-        uint256 amountIn,
-        string calldata author
-    ) external;
 }
